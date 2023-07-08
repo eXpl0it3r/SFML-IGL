@@ -114,7 +114,7 @@ void TriangleExample::initializeIGL()
             .swapChainColorSpace = igl::ColorSpace::SRGB_LINEAR,
         };
 
-        auto ctx = igl::vulkan::HWDevice::createContext(cfg, m_window.getSystemHandle());
+        auto ctx = igl::vulkan::HWDevice::createContext(cfg, (void *)m_window.getSystemHandle());
 
         auto devices = igl::vulkan::HWDevice::queryDevices(*ctx.get(), igl::HWDeviceQueryDesc(igl::HWDeviceType::DiscreteGpu), nullptr);
         if (devices.empty())
