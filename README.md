@@ -3,6 +3,10 @@
 Using the Simple and Fast Multimedia Library (SFML) for windowing and input,
 and the Intermediate Graphics Library (IGL) for graphics rendering.
 
+This example renders a triangle using the Vulkan graphics API.
+
+![Vulkan Triangle](https://github.com/eXpl0it3r/SFML-IGL/assets/920861/6f79044a-38d9-4c57-a67f-fa53ce9ee3f5)
+
 ## Pre-Requisites
 
 -   Vulkan SDK
@@ -16,6 +20,11 @@ and the Intermediate Graphics Library (IGL) for graphics rendering.
     -   Windows: `winget install Kitware.CMake`
 -   Compiler with C++20 Support
     -   Requires `<format>`
+
+## Building
+
+-   `cmake -S . -B build`
+-   `cmake --build build`
 
 ## Resources
 

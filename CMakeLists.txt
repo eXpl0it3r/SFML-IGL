@@ -22,12 +22,12 @@ FetchContent_Declare(IGL
     GIT_TAG main)
 FetchContent_MakeAvailable(IGL)
 
-add_executable(SFML-IGL main.cpp)
-target_link_libraries(SFML-IGL PRIVATE sfml-window IGLLibrary)
-target_compile_features(SFML-IGL PRIVATE cxx_std_20)
+add_executable(TriangleExample main.cpp)
+target_link_libraries(TriangleExample PRIVATE sfml-window IGLLibrary)
+target_compile_features(TriangleExample PRIVATE cxx_std_20)
 if (WIN32 AND BUILD_SHARED_LIBS)
-    add_custom_command(TARGET SFML-IGL POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:SFML-IGL> $<TARGET_FILE_DIR:SFML-IGL> COMMAND_EXPAND_LISTS)
+    add_custom_command(TARGET TriangleExample POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:TriangleExample> $<TARGET_FILE_DIR:TriangleExample> COMMAND_EXPAND_LISTS)
 endif()
 
-install(TARGETS SFML-IGL)
+install(TARGETS TriangleExample)
