@@ -86,18 +86,24 @@ void TriangleExample::run()
     {
         render(getNativeDrawable());
 
-        for (auto event = sf::Event{}; m_window.pollEvent(event);)
+        while (const std::optional event = m_window.pollEvent())
         {
-            if (event.type == sf::Event::Closed ||
-                (event.type == sf::Event::KeyPressed && event.key.scancode == sf::Keyboard::Scan::Escape))
+            if (event->is<sf::Event::Closed>())
             {
                 m_window.close();
+            }            
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+            {
+                if (keyPressed->scancode == sf::Keyboard::Scan::Escape)
+                {
+                    m_window.close();
+                }
             }
-            else if (event.type == sf::Event::Resized)
+            else if (const auto* resized = event->getIf<sf::Event::Resized>())
             {
                 auto *vulkanDevice = static_cast<igl::vulkan::Device *>(m_device.get());
                 auto &ctx = vulkanDevice->getVulkanContext();
-                ctx.initSwapchain(event.size.width, event.size.height);
+                ctx.initSwapchain(resized->size.x, resized->size.y);
             }
         }
     }
@@ -108,13 +114,11 @@ void TriangleExample::initializeIGL()
     // create a device
     {
         const auto cfg = igl::vulkan::VulkanContextConfig{
-            .maxTextures = 8,
-            .maxSamplers = 8,
             .terminateOnValidationError = true,
             .swapChainColorSpace = igl::ColorSpace::SRGB_LINEAR,
         };
 
-        auto ctx = igl::vulkan::HWDevice::createContext(cfg, (void *)m_window.getSystemHandle());
+        auto ctx = igl::vulkan::HWDevice::createContext(cfg, (void *)m_window.getNativeHandle());
 
         auto devices = igl::vulkan::HWDevice::queryDevices(*ctx.get(), igl::HWDeviceQueryDesc(igl::HWDeviceType::DiscreteGpu), nullptr);
         if (devices.empty())
@@ -126,7 +130,7 @@ void TriangleExample::initializeIGL()
     }
 
     // Command queue: backed by different types of GPU HW queues
-    auto desc = igl::CommandQueueDesc{igl::CommandQueueType::Graphics};
+    auto desc = igl::CommandQueueDesc{};
     m_commandQueue = m_device->createCommandQueue(desc, nullptr);
 
     m_renderPass.colorAttachments.resize(KNumColorAttachments);
@@ -139,7 +143,7 @@ void TriangleExample::initializeIGL()
         {
             continue;
         }
-        m_renderPass.colorAttachments[i] = igl::RenderPassDesc::ColorAttachmentDesc{};
+        m_renderPass.colorAttachments[i] = igl::RenderPassDesc::AttachmentDesc{};
         m_renderPass.colorAttachments[i].loadAction = igl::LoadAction::Clear;
         m_renderPass.colorAttachments[i].storeAction = igl::StoreAction::Store;
         m_renderPass.colorAttachments[i].clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -244,7 +248,7 @@ void TriangleExample::render(const std::shared_ptr<igl::ITexture> &nativeDrawabl
     commands->bindViewport(viewport);
     commands->bindScissorRect(scissor);
     commands->pushDebugGroupLabel("Render Triangle", igl::Color(1, 0, 0));
-    commands->draw(igl::PrimitiveType::Triangle, 0, 3);
+    commands->draw(3);
     commands->popDebugGroupLabel();
     commands->endEncoding();
 

@@ -11,21 +11,21 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - { name: Windows VS2022, os: windows-2022 }
-        - { name: Linux GCC,      os: ubuntu-22.04 }
-        - { name: Linux Clang,    os: ubuntu-22.04, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
+        - { name: Windows MSVC, os: windows-2025 }
+        - { name: Linux GCC,    os: ubuntu-24.04 }
+        - { name: Linux Clang,  os: ubuntu-24.04, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
 
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
 
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install clang xorg-dev libxinerama-dev libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libstdc++-12-dev
+      run: sudo apt-get update && sudo apt-get install clang xorg-dev libxinerama-dev libxrandr-dev libxi-dev libxcursor-dev libudev-dev libharfbuzz-dev libflac-dev libvorbis-dev libmbedtls-dev libgl1-mesa-dev libegl1-mesa-dev libstdc++-12-dev
 
     - name: Prepare Vulkan SDK
-      uses: humbletim/setup-vulkan-sdk@v1.2.0
+      uses: humbletim/setup-vulkan-sdk@v1.2.1
       with:
         vulkan-query-version: 1.3.250.1
         vulkan-use-cache: true
