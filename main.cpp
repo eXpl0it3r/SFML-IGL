@@ -115,7 +115,7 @@ void TriangleExample::initializeIGL()
     {
         const auto cfg = igl::vulkan::VulkanContextConfig{
             .terminateOnValidationError = true,
-            .swapChainColorSpace = igl::ColorSpace::SRGB_LINEAR,
+            .swapChainColorSpace = igl::ColorSpace::SRGBLinear,
         };
 
         auto ctx = igl::vulkan::HWDevice::createContext(cfg, (void *)m_window.getNativeHandle());
